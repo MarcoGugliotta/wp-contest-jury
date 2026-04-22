@@ -25,13 +25,22 @@ class WPCJ_Settings {
 
     private static function defaults(): array {
         return array(
-            'galleries' => array(),
+            'galleries'        => array(),
+            'show_author_name' => false,
         );
     }
 
     public static function get_all(): array {
         $saved = get_option( self::OPTION_KEY, array() );
         return wp_parse_args( $saved, self::defaults() );
+    }
+
+    /**
+     * Whether jurors see the author's name/surname during voting.
+     * false = anonymous (default), true = author info visible.
+     */
+    public static function show_author_name(): bool {
+        return (bool) self::get_all()['show_author_name'];
     }
 
     /**
@@ -72,6 +81,8 @@ class WPCJ_Settings {
                 }
             }
         }
+
+        $clean['show_author_name'] = ! empty( $data['show_author_name'] );
 
         update_option( self::OPTION_KEY, $clean );
     }

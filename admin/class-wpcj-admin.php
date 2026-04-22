@@ -105,6 +105,11 @@ class WPCJ_Admin {
      * AJAX calls are handled separately via add_action('wp_ajax_*').
      */
     public function handle_form_submissions(): void {
+        // GET-based actions (links with nonces: open/close round, remove juror)
+        if ( isset( $_GET['wpcj_action'] ) ) {
+            $this->handle_get_actions( sanitize_key( $_GET['wpcj_action'] ) );
+        }
+
         if ( ! isset( $_POST['wpcj_action'] ) ) {
             return;
         }
@@ -127,9 +132,8 @@ class WPCJ_Admin {
             }
             $name       = sanitize_text_field( $_POST['round_name'] ?? '' );
             $gallery_id = absint( $_POST['gallery_id'] ?? 0 );
-            $anonymous  = ( ( $_POST['anonymous'] ?? '1' ) === '1' );
             if ( $name && $gallery_id ) {
-                WPCJ_DB::insert_round( $name, $gallery_id, $anonymous );
+                WPCJ_DB::insert_round( $name, $gallery_id );
             }
             wp_redirect( admin_url( 'admin.php?page=wpcj-rounds' ) );
             exit;
@@ -147,6 +151,50 @@ class WPCJ_Admin {
             if ( $user_id ) {
                 $user = get_user_by( 'id', $user_id );
                 $user && $user->set_role( $role );
+            }
+            wp_redirect( admin_url( 'admin.php?page=wpcj-jurors' ) );
+            exit;
+        }
+    }
+
+    private function handle_get_actions( string $action ): void {
+        if ( $action === 'open_round' ) {
+            $round_id = absint( $_GET['round'] ?? 0 );
+            check_admin_referer( 'wpcj_open_round_' . $round_id );
+            if ( ! current_user_can( 'wpcj_manage_rounds' ) ) {
+                wp_die( esc_html__( 'Access denied.', 'wp-contest-jury' ) );
+            }
+            if ( $round_id ) {
+                WPCJ_DB::update_round_status( $round_id, 'open' );
+            }
+            wp_redirect( admin_url( 'admin.php?page=wpcj-rounds' ) );
+            exit;
+        }
+
+        if ( $action === 'close_round' ) {
+            $round_id = absint( $_GET['round'] ?? 0 );
+            check_admin_referer( 'wpcj_close_round_' . $round_id );
+            if ( ! current_user_can( 'wpcj_manage_rounds' ) ) {
+                wp_die( esc_html__( 'Access denied.', 'wp-contest-jury' ) );
+            }
+            if ( $round_id ) {
+                WPCJ_DB::update_round_status( $round_id, 'closed' );
+            }
+            wp_redirect( admin_url( 'admin.php?page=wpcj-rounds' ) );
+            exit;
+        }
+
+        if ( $action === 'remove_juror' ) {
+            $user_id = absint( $_GET['user'] ?? 0 );
+            check_admin_referer( 'wpcj_remove_juror_' . $user_id );
+            if ( ! current_user_can( 'wpcj_manage_jurors' ) ) {
+                wp_die( esc_html__( 'Access denied.', 'wp-contest-jury' ) );
+            }
+            if ( $user_id ) {
+                $user = get_user_by( 'id', $user_id );
+                if ( $user ) {
+                    $user->set_role( 'subscriber' );
+                }
             }
             wp_redirect( admin_url( 'admin.php?page=wpcj-jurors' ) );
             exit;

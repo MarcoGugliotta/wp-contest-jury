@@ -41,24 +41,6 @@ $galleries = WPCJ_Settings::get_galleries();
                         </select>
                     </td>
                 </tr>
-                <tr>
-                    <th><?php esc_html_e( 'Voting Mode', 'wp-contest-jury' ); ?></th>
-                    <td>
-                        <fieldset>
-                            <label>
-                                <input type="radio" name="anonymous" value="1" checked>
-                                <strong><?php esc_html_e( 'Anonymous', 'wp-contest-jury' ); ?></strong>
-                                &mdash; <?php esc_html_e( 'jurors do not see the author\'s name or identity.', 'wp-contest-jury' ); ?>
-                            </label>
-                            <br>
-                            <label>
-                                <input type="radio" name="anonymous" value="0">
-                                <strong><?php esc_html_e( 'Transparent', 'wp-contest-jury' ); ?></strong>
-                                &mdash; <?php esc_html_e( 'author information is visible alongside the entry.', 'wp-contest-jury' ); ?>
-                            </label>
-                        </fieldset>
-                    </td>
-                </tr>
             </table>
             <?php submit_button( __( 'Create Round', 'wp-contest-jury' ) ); ?>
         </form>
@@ -66,6 +48,15 @@ $galleries = WPCJ_Settings::get_galleries();
     <?php endif; ?>
 
     <h2><?php esc_html_e( 'All Rounds', 'wp-contest-jury' ); ?></h2>
+
+    <p class="wpcj-notice <?php echo WPCJ_Settings::show_author_name() ? 'wpcj-notice-transp' : 'wpcj-notice-anon'; ?>">
+        <?php if ( WPCJ_Settings::show_author_name() ) : ?>
+            &#128100; <?php esc_html_e( 'Voting mode: author name visible to jurors (configured in Settings).', 'wp-contest-jury' ); ?>
+        <?php else : ?>
+            &#128065; <?php esc_html_e( 'Voting mode: anonymous — jurors do not see the author\'s name (configured in Settings).', 'wp-contest-jury' ); ?>
+        <?php endif; ?>
+    </p>
+
     <?php if ( empty( $rounds ) ) : ?>
         <p><?php esc_html_e( 'No rounds yet.', 'wp-contest-jury' ); ?></p>
     <?php else : ?>
@@ -75,7 +66,6 @@ $galleries = WPCJ_Settings::get_galleries();
                     <th>ID</th>
                     <th><?php esc_html_e( 'Name', 'wp-contest-jury' ); ?></th>
                     <th><?php esc_html_e( 'Gallery', 'wp-contest-jury' ); ?></th>
-                    <th><?php esc_html_e( 'Mode', 'wp-contest-jury' ); ?></th>
                     <th><?php esc_html_e( 'Status', 'wp-contest-jury' ); ?></th>
                     <th><?php esc_html_e( 'Actions', 'wp-contest-jury' ); ?></th>
                 </tr>
@@ -86,17 +76,6 @@ $galleries = WPCJ_Settings::get_galleries();
                     <td><?php echo esc_html( $round['id'] ); ?></td>
                     <td><?php echo esc_html( $round['name'] ); ?></td>
                     <td><?php echo esc_html( WPCJ_Settings::get_gallery_label( (int) $round['gallery_id'] ) ); ?></td>
-                    <td>
-                        <?php if ( $round['anonymous'] ) : ?>
-                            <span class="wpcj-mode wpcj-mode-anon" title="<?php esc_attr_e( 'Jurors do not see the author', 'wp-contest-jury' ); ?>">
-                                &#128065; <?php esc_html_e( 'Anonymous', 'wp-contest-jury' ); ?>
-                            </span>
-                        <?php else : ?>
-                            <span class="wpcj-mode wpcj-mode-transp" title="<?php esc_attr_e( 'Author info is visible to jurors', 'wp-contest-jury' ); ?>">
-                                &#128100; <?php esc_html_e( 'Transparent', 'wp-contest-jury' ); ?>
-                            </span>
-                        <?php endif; ?>
-                    </td>
                     <td><span class="wpcj-status wpcj-status-<?php echo esc_attr( $round['status'] ); ?>"><?php echo esc_html( $round['status'] ); ?></span></td>
                     <td>
                         <?php if ( $round['status'] === 'draft' ) : ?>

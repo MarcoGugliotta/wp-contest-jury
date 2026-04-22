@@ -17,7 +17,7 @@ if ( ! $round || $round['status'] !== 'open' ) : ?>
 endif;
 
 $gallery_id   = (int) $round['gallery_id'];
-$is_anonymous = (bool) $round['anonymous'];
+$is_anonymous = ! WPCJ_Settings::show_author_name();
 $entries      = WPCJ_CG_Reader::get_entries( $gallery_id );
 $juror_id     = get_current_user_id();
 $my_votes_raw = WPCJ_DB::get_votes_by_juror( $round_id, $juror_id );

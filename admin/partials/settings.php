@@ -63,6 +63,23 @@ $galleries = $settings['galleries'];
             </button>
         </p>
 
+        <h2><?php esc_html_e( 'Voting Privacy', 'wp-contest-jury' ); ?></h2>
+        <table class="form-table">
+            <tr>
+                <th><?php esc_html_e( 'Show author name to jurors', 'wp-contest-jury' ); ?></th>
+                <td>
+                    <label>
+                        <input type="checkbox" name="show_author_name" value="1"
+                               <?php checked( WPCJ_Settings::show_author_name() ); ?>>
+                        <?php esc_html_e( 'Jurors can see the name and surname of the entry\'s author during voting.', 'wp-contest-jury' ); ?>
+                    </label>
+                    <p class="description">
+                        <?php esc_html_e( 'When unchecked (default), voting is fully anonymous: jurors see only the entry ID and the image.', 'wp-contest-jury' ); ?>
+                    </p>
+                </td>
+            </tr>
+        </table>
+
         <?php submit_button( __( 'Save Settings', 'wp-contest-jury' ) ); ?>
     </form>
 </div>

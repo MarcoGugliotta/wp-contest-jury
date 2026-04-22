@@ -23,14 +23,12 @@ class WPCJ_Activator {
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
         // Jury voting rounds (initial evaluation, shortlist, winner selection)
-        // anonymous=1: jurors see no author info (blind voting)
-        // anonymous=0: author info is visible (transparent voting)
+        // Anonymity is a global plugin setting (WPCJ_Settings::show_author_name()), not per-round.
         $sql_rounds = "CREATE TABLE {$wpdb->prefix}jury_rounds (
             id         BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             name       VARCHAR(100)        NOT NULL,
             gallery_id TINYINT(2)          NOT NULL,
             status     ENUM('draft','open','closed') NOT NULL DEFAULT 'draft',
-            anonymous  TINYINT(1)          NOT NULL DEFAULT 1,
             created_at DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id)
         ) $charset;";

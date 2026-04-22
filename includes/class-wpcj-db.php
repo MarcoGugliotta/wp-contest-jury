@@ -32,12 +32,12 @@ class WPCJ_DB {
         return $row ?: null;
     }
 
-    public static function insert_round( string $name, int $gallery_id, bool $anonymous = true ): int|false {
+    public static function insert_round( string $name, int $gallery_id ): int|false {
         global $wpdb;
         $ok = $wpdb->insert(
             $wpdb->prefix . 'jury_rounds',
-            array( 'name' => $name, 'gallery_id' => $gallery_id, 'status' => 'draft', 'anonymous' => $anonymous ? 1 : 0 ),
-            array( '%s', '%d', '%s', '%d' )
+            array( 'name' => $name, 'gallery_id' => $gallery_id, 'status' => 'draft' ),
+            array( '%s', '%d', '%s' )
         );
         return $ok ? $wpdb->insert_id : false;
     }
