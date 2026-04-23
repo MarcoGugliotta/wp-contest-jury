@@ -23,7 +23,7 @@ This approach is stable across festival editions: WP registration data does not 
 
 ---
 
-## PCG upload form — field naming convention
+## PCG upload form - field naming convention
 
 If for any reason you choose to add name or surname fields to the PCG upload form, you **must** set their **Field Name** (the label in PCG's form builder) to exactly:
 
@@ -52,7 +52,7 @@ The jury plugin reads `wp_contest_gal1ery_f_input` and excludes from the entry d
 
 | Role | Capabilities |
 |------|--------------|
-| `jury_member` | `wpcj_vote` — access the jury panel and cast votes |
+| `jury_member` | `wpcj_vote` - access the jury panel and cast votes |
 | `jury_chief` | All jury capabilities + manage rounds, jurors, settings, results |
 
 Jurors never access wp-admin. All voting happens on the frontend page with the shortcode.
@@ -73,8 +73,8 @@ Place this shortcode on any WordPress page. Jurors navigate to that URL, log in,
 
 | Table | Description |
 |-------|-------------|
-| `{prefix}jury_rounds` | Voting rounds — name, gallery ID, status (draft / open / closed) |
-| `{prefix}jury_votes` | One row per juror × entry × round — score 1–5, optional notes |
+| `{prefix}jury_rounds` | Voting rounds - name, gallery ID, status (draft / open / closed) |
+| `{prefix}jury_votes` | One row per juror × entry × round - score 1–5, optional notes |
 | `{prefix}jury_shortlist` | Entries promoted to a shortlist within a round |
 
 PCG tables are never written to by this plugin.
@@ -87,6 +87,6 @@ Each entry card in the jury panel shows:
 
 - Thumbnail (click to open full size)
 - Entry ID
-- **Title** — first Short_Text field from `wp_contest_gal1ery_entries`
+- **Title** - first Short_Text field from `wp_contest_gal1ery_entries`
 - Author name (only in transparent mode)
-- **Details** toggle — expands all PCG form fields for that entry, excluding any field whose titel is `field_name` or `field_surname`
+- **Details** toggle - expands all PCG form fields for that entry, excluding any field whose titel is `field_name` or `field_surname`

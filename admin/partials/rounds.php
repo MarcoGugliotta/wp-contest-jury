@@ -53,7 +53,7 @@ $galleries = WPCJ_Settings::get_galleries();
         <?php if ( WPCJ_Settings::show_author_name() ) : ?>
             &#128100; <?php esc_html_e( 'Voting mode: author name visible to jurors (configured in Settings).', 'wp-contest-jury' ); ?>
         <?php else : ?>
-            &#128065; <?php esc_html_e( 'Voting mode: anonymous — jurors do not see the author\'s name (configured in Settings).', 'wp-contest-jury' ); ?>
+            &#128065; <?php esc_html_e( 'Voting mode: anonymous - jurors do not see the author\'s name (configured in Settings).', 'wp-contest-jury' ); ?>
         <?php endif; ?>
     </p>
 

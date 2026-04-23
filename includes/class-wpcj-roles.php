@@ -5,13 +5,13 @@ defined( 'ABSPATH' ) || exit;
  * Manages the two custom WordPress roles for the jury system.
  *
  * WP roles are stored in the options table (not in code), so add_role() is
- * idempotent only if called via the activation hook — calling it on every
+ * idempotent only if called via the activation hook - calling it on every
  * page load would silently reset capabilities each time. That's why we call
  * this only from WPCJ_Activator::activate().
  *
  * Capabilities follow the principle of least privilege:
- *   jury_chief   — full jury admin (manage rounds, see all votes, export)
- *   jury_member  — vote only; cannot see other jurors' votes or author data
+ *   jury_chief   - full jury admin (manage rounds, see all votes, export)
+ *   jury_member  - vote only; cannot see other jurors' votes or author data
  */
 class WPCJ_Roles {
 

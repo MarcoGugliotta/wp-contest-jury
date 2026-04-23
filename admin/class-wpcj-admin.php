@@ -6,11 +6,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * Menu structure:
  *   Jury Panel (top-level)
- *   ├── Dashboard       — overview / stats
- *   ├── Voting Rounds   — create/open/close rounds
- *   ├── Vote            — voting interface for jurors
- *   ├── Jurors          — assign roles to WP users (chief only)
- *   └── Settings        — configure gallery IDs and labels (chief only)
+ *   ├── Dashboard       - overview / stats
+ *   ├── Voting Rounds   - create/open/close rounds
+ *   ├── Vote            - voting interface for jurors
+ *   ├── Jurors          - assign roles to WP users (chief only)
+ *   └── Settings        - configure gallery IDs and labels (chief only)
  */
 class WPCJ_Admin {
 

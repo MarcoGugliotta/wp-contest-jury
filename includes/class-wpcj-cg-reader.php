@@ -9,15 +9,15 @@ defined( 'ABSPATH' ) || exit;
  * jury plugin is decoupled from CG PRO's internal naming conventions.
  *
  * CG PRO table naming convention (note: intentional "1" instead of "l"):
- *   {prefix}contest_gal1ery          — photo entries (GalleryID column distinguishes galleries)
- *   {prefix}contest_gal1ery_entries   — form field values (EAV, pid → contest_gal1ery.id)
- *   {prefix}contest_gal1ery_options   — one row per gallery (id = GalleryID, GalleryName)
+ *   {prefix}contest_gal1ery          - photo entries (GalleryID column distinguishes galleries)
+ *   {prefix}contest_gal1ery_entries   - form field values (EAV, pid → contest_gal1ery.id)
+ *   {prefix}contest_gal1ery_options   - one row per gallery (id = GalleryID, GalleryName)
  */
 class WPCJ_CG_Reader {
 
     /**
      * CG PRO uses ONE table for all galleries (GalleryID column distinguishes them).
-     * Table name: {prefix}contest_gal1ery — note intentional "1" instead of "l".
+     * Table name: {prefix}contest_gal1ery - note intentional "1" instead of "l".
      * The $i parameter in CG PRO's create-tables.php is the multisite blog prefix
      * (empty string on single-site), NOT the gallery ID.
      */
@@ -122,7 +122,7 @@ class WPCJ_CG_Reader {
 
     /**
      * Returns all form field values for an entry from the PCG EAV table,
-     * excluding identity fields (field_name / field_surname — see README).
+     * excluding identity fields (field_name / field_surname - see README).
      *
      * Short_Text = single-line fields (title, etc.)
      * Long_Text  = multi-line fields (synopsis, description, etc.)

@@ -33,7 +33,7 @@ class WPCJ_Plugin {
 
     /**
      * Register all WordPress hooks. Called once from the main plugin file.
-     * Hooks are WordPress's event bus — add_action() ≈ addEventListener().
+     * Hooks are WordPress's event bus - add_action() ≈ addEventListener().
      */
     public function run(): void {
         add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );

@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Handles plugin activation: creates DB tables and registers custom WP roles.
  *
- * dbDelta() is WordPress's schema migration utility — it runs CREATE TABLE
+ * dbDelta() is WordPress's schema migration utility - it runs CREATE TABLE
  * but is smart enough to ALTER the table if it already exists with fewer columns.
  * Think of it like Liquibase/Flyway but only for a single idempotent statement.
  */
@@ -33,7 +33,7 @@ class WPCJ_Activator {
             PRIMARY KEY (id)
         ) $charset;";
 
-        // One row per (round, juror, entry) — the UNIQUE key enforces one vote per juror per entry per round
+        // One row per (round, juror, entry) - the UNIQUE key enforces one vote per juror per entry per round
         $sql_votes = "CREATE TABLE {$wpdb->prefix}jury_votes (
             id         BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             round_id   BIGINT(20) UNSIGNED NOT NULL,

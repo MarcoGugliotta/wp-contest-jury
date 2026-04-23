@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Handles plugin deactivation.
  *
- * Tables and data are intentionally preserved on deactivation — only removed
+ * Tables and data are intentionally preserved on deactivation - only removed
  * on full uninstall (uninstall.php). This matches standard WP plugin behaviour.
  */
 class WPCJ_Deactivator {

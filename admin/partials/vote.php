@@ -29,7 +29,7 @@ $my_votes        = array_column( $my_votes_raw, null, 'entry_id' );
     <h1><?php
         $gallery_label = WPCJ_Settings::get_gallery_label( $gallery_id );
         printf(
-            esc_html__( 'Voting: %1$s — %2$s', 'wp-contest-jury' ),
+            esc_html__( 'Voting: %1$s - %2$s', 'wp-contest-jury' ),
             esc_html( $round['name'] ),
             esc_html( $gallery_label )
         );
@@ -37,11 +37,11 @@ $my_votes        = array_column( $my_votes_raw, null, 'entry_id' );
 
     <?php if ( $is_anonymous ) : ?>
         <p class="wpcj-notice wpcj-notice-anon">
-            &#128065; <?php esc_html_e( 'Anonymous round — author information is hidden. Evaluate the work alone.', 'wp-contest-jury' ); ?>
+            &#128065; <?php esc_html_e( 'Anonymous round - author information is hidden. Evaluate the work alone.', 'wp-contest-jury' ); ?>
         </p>
     <?php else : ?>
         <p class="wpcj-notice wpcj-notice-transp">
-            &#128100; <?php esc_html_e( 'Transparent round — author information is visible below each entry.', 'wp-contest-jury' ); ?>
+            &#128100; <?php esc_html_e( 'Transparent round - author information is visible below each entry.', 'wp-contest-jury' ); ?>
         </p>
     <?php endif; ?>
 

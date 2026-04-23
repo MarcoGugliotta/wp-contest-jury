@@ -26,7 +26,7 @@ if ( ! empty( $cg_galleries ) ) {
         );
     }
 } else {
-    // CG PRO not installed or no galleries yet — fall back to saved settings or one empty row
+    // CG PRO not installed or no galleries yet - fall back to saved settings or one empty row
     $galleries = ! empty( $settings['galleries'] )
         ? $settings['galleries']
         : array( array( 'id' => '', 'label' => '' ) );
@@ -43,7 +43,7 @@ if ( ! empty( $cg_galleries ) ) {
         <?php wp_nonce_field( 'wpcj_save_settings', 'wpcj_nonce' ); ?>
         <input type="hidden" name="wpcj_action" value="save_settings">
 
-        <h2><?php esc_html_e( 'Contest Gallery PRO — Galleries', 'wp-contest-jury' ); ?></h2>
+        <h2><?php esc_html_e( 'Contest Gallery PRO - Galleries', 'wp-contest-jury' ); ?></h2>
         <?php if ( ! empty( $cg_galleries ) ) : ?>
         <p class="description">
             <?php esc_html_e( 'Galleries are loaded automatically from Contest Gallery PRO. Set the label jurors will see and the CG PRO form field IDs for first name and surname.', 'wp-contest-jury' ); ?>

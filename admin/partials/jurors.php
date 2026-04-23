@@ -53,7 +53,7 @@ $all_users = get_users( array( 'role__not_in' => array( 'jury_chief', 'jury_memb
                 <th><label for="juror_user_id"><?php esc_html_e( 'WordPress User', 'wp-contest-jury' ); ?></label></th>
                 <td>
                     <select id="juror_user_id" name="juror_user_id" required>
-                        <option value=""><?php esc_html_e( '— Select user —', 'wp-contest-jury' ); ?></option>
+                        <option value=""><?php esc_html_e( '- Select user -', 'wp-contest-jury' ); ?></option>
                         <?php foreach ( $all_users as $u ) : ?>
                             <option value="<?php echo esc_attr( $u->ID ); ?>">
                                 <?php echo esc_html( $u->display_name . ' (' . $u->user_email . ')' ); ?>

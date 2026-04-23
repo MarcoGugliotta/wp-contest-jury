@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Data-access layer for the jury plugin's own tables.
  *
- * All writes go through here. $wpdb is WordPress's DB abstraction — think of
+ * All writes go through here. $wpdb is WordPress's DB abstraction - think of
  * it as a lightweight JDBC wrapper with built-in query preparation.
  * $wpdb->prepare() is mandatory for any query with user-supplied values
  * (prevents SQL injection the same way PreparedStatement does in Java).
@@ -75,7 +75,7 @@ class WPCJ_DB {
 
     /**
      * Returns all votes cast by a specific juror in a round.
-     * Jurors NEVER see other jurors' votes — this is enforced at the query level.
+     * Jurors NEVER see other jurors' votes - this is enforced at the query level.
      */
     public static function get_votes_by_juror( int $round_id, int $juror_id ): array {
         global $wpdb;
@@ -91,7 +91,7 @@ class WPCJ_DB {
     }
 
     /**
-     * Aggregated scores per entry for a round — jury chief only.
+     * Aggregated scores per entry for a round - jury chief only.
      */
     public static function get_round_results( int $round_id ): array {
         global $wpdb;

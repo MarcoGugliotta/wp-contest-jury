@@ -5,7 +5,7 @@ $rounds = WPCJ_DB::get_rounds();
 $open   = array_filter( $rounds, fn( $r ) => $r['status'] === 'open' );
 ?>
 <div class="wrap wpcj-wrap">
-    <h1><?php esc_html_e( 'Jury Panel — Dashboard', 'wp-contest-jury' ); ?></h1>
+    <h1><?php esc_html_e( 'Jury Panel - Dashboard', 'wp-contest-jury' ); ?></h1>
 
     <div class="wpcj-cards">
         <div class="wpcj-card">
