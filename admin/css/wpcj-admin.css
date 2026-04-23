@@ -31,9 +31,17 @@
 .wpcj-entries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
 .wpcj-entry-card   { background: #fff; border: 1px solid #c3c4c7; border-radius: 6px; overflow: hidden; }
 .wpcj-entry-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
-.wpcj-entry-meta   { padding: 8px 12px 0; }
-.wpcj-entry-id     { font-size: 12px; color: #646970; }
-.wpcj-vote-controls { padding: 8px 12px 12px; }
+.wpcj-entry-meta          { padding: 8px 12px 0; }
+.wpcj-entry-id            { font-size: 12px; color: #646970; display: block; }
+.wpcj-entry-title         { font-weight: 600; font-size: 13px; margin: 4px 0 2px; }
+.wpcj-author-info         { font-size: 12px; color: #50575e; margin-top: 2px; }
+.wpcj-entry-details       { margin-top: 6px; font-size: 12px; }
+.wpcj-entry-details summary { cursor: pointer; color: #2271b1; user-select: none; }
+.wpcj-entry-details-body  { margin-top: 6px; border-top: 1px solid #e0e0e0; padding-top: 6px; }
+.wpcj-field-text          { margin: 0 0 4px; font-weight: 500; }
+.wpcj-field-long          { margin: 0 0 4px; color: #50575e; line-height: 1.5; }
+.wpcj-field-label         { font-weight: 600; }
+.wpcj-vote-controls       { padding: 8px 12px 12px; }
 
 /* Star rating */
 .wpcj-stars { display: flex; gap: 2px; margin-bottom: 8px; }

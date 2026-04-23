@@ -18,6 +18,7 @@ class WPCJ_Admin {
         add_action( 'admin_menu',            array( $this, 'register_menus' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
         add_action( 'admin_init',            array( $this, 'handle_form_submissions' ) );
+        add_action( 'wp_ajax_wpcj_save_vote', array( $this, 'ajax_save_vote' ) );
     }
 
     public function register_menus(): void {
@@ -198,6 +199,39 @@ class WPCJ_Admin {
             }
             wp_redirect( admin_url( 'admin.php?page=wpcj-jurors' ) );
             exit;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // AJAX handlers
+    // -------------------------------------------------------------------------
+
+    public function ajax_save_vote(): void {
+        check_ajax_referer( 'wpcj_nonce', 'nonce' );
+
+        if ( ! current_user_can( 'wpcj_vote' ) ) {
+            wp_send_json_error( array( 'message' => __( 'Access denied.', 'wp-contest-jury' ) ), 403 );
+        }
+
+        $round_id = absint( $_POST['round_id'] ?? 0 );
+        $entry_id = absint( $_POST['entry_id'] ?? 0 );
+        $score    = absint( $_POST['score']    ?? 0 );
+        $notes    = sanitize_textarea_field( $_POST['notes'] ?? '' );
+
+        if ( ! $round_id || ! $entry_id || $score < 1 || $score > 5 ) {
+            wp_send_json_error( array( 'message' => __( 'Invalid data.', 'wp-contest-jury' ) ), 400 );
+        }
+
+        $round = WPCJ_DB::get_round( $round_id );
+        if ( ! $round || $round['status'] !== 'open' ) {
+            wp_send_json_error( array( 'message' => __( 'Round is not open.', 'wp-contest-jury' ) ), 400 );
+        }
+
+        $ok = WPCJ_DB::upsert_vote( $round_id, get_current_user_id(), $entry_id, $score, $notes );
+        if ( $ok ) {
+            wp_send_json_success();
+        } else {
+            wp_send_json_error( array( 'message' => __( 'Could not save vote.', 'wp-contest-jury' ) ), 500 );
         }
     }
 

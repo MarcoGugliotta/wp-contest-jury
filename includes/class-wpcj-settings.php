@@ -4,12 +4,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Manages all plugin configuration stored in WordPress options.
  *
- * The gallery list is the core configurable item: each installation defines
- * which Contest Gallery PRO gallery IDs to use and what to call them.
- *
  * Stored in wp_options as a single serialized array under 'wpcj_settings'.
- * Think of this as a typed config bean — get_option/update_option are the
- * WP equivalent of reading from application.properties.
  *
  * Default option shape:
  * [
@@ -17,7 +12,13 @@ defined( 'ABSPATH' ) || exit;
  *     [ 'id' => 1, 'label' => 'Gallery 1' ],
  *     ...
  *   ],
+ *   'show_author_name' => false,
+ *   'jury_page_id'     => 0,
  * ]
+ *
+ * Author identity is resolved via wp_contest_gal1ery.WpUserId → wp_users/wp_usermeta.
+ * PCG form field IDs are NOT stored here: they change per festival while WP user
+ * data is stable across editions.
  */
 class WPCJ_Settings {
 
@@ -71,13 +72,15 @@ class WPCJ_Settings {
     public static function save( array $data ): void {
         $clean = self::defaults();
 
-        // Galleries: array of {id, label} pairs submitted from the settings form
         if ( ! empty( $data['galleries'] ) && is_array( $data['galleries'] ) ) {
             foreach ( $data['galleries'] as $g ) {
                 $id    = absint( $g['id'] ?? 0 );
                 $label = sanitize_text_field( $g['label'] ?? '' );
                 if ( $id > 0 && $label !== '' ) {
-                    $clean['galleries'][] = array( 'id' => $id, 'label' => $label );
+                    $clean['galleries'][] = array(
+                        'id'    => $id,
+                        'label' => $label,
+                    );
                 }
             }
         }

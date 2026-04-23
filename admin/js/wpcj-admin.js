@@ -43,7 +43,7 @@
                     $btn.after('<span class="wpcj-saved-indicator">Saved ✓</span>');
                 }
             } else {
-                alert(response.data || 'Error saving vote.');
+                alert((response.data && response.data.message) || 'Error saving vote.');
             }
         }).always(function () {
             $btn.prop('disabled', false);

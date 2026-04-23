@@ -6,7 +6,31 @@ if ( ! current_user_can( 'wpcj_manage_rounds' ) ) {
 }
 
 $settings  = WPCJ_Settings::get_all();
-$galleries = $settings['galleries'];
+
+// Build the gallery rows: start from CG PRO galleries (id + GalleryName),
+// then overlay any saved label / field IDs from our own settings.
+$saved_by_id = array();
+foreach ( $settings['galleries'] as $g ) {
+    $saved_by_id[ (int) $g['id'] ] = $g;
+}
+
+$cg_galleries = WPCJ_CG_Reader::get_cg_galleries();
+if ( ! empty( $cg_galleries ) ) {
+    $galleries = array();
+    foreach ( $cg_galleries as $cg ) {
+        $id   = (int) $cg['id'];
+        $saved = $saved_by_id[ $id ] ?? array();
+        $galleries[] = array(
+            'id'    => $id,
+            'label' => $saved['label'] ?? $cg['name'],
+        );
+    }
+} else {
+    // CG PRO not installed or no galleries yet — fall back to saved settings or one empty row
+    $galleries = ! empty( $settings['galleries'] )
+        ? $settings['galleries']
+        : array( array( 'id' => '', 'label' => '' ) );
+}
 ?>
 <div class="wrap wpcj-wrap">
     <h1><?php esc_html_e( 'Jury Plugin Settings', 'wp-contest-jury' ); ?></h1>
@@ -20,9 +44,15 @@ $galleries = $settings['galleries'];
         <input type="hidden" name="wpcj_action" value="save_settings">
 
         <h2><?php esc_html_e( 'Contest Gallery PRO — Galleries', 'wp-contest-jury' ); ?></h2>
+        <?php if ( ! empty( $cg_galleries ) ) : ?>
         <p class="description">
-            <?php esc_html_e( 'Add the Contest Gallery PRO gallery IDs you want to use in this contest. The label is what jurors will see (e.g. "Single Photo", "Photo Series").', 'wp-contest-jury' ); ?>
+            <?php esc_html_e( 'Galleries are loaded automatically from Contest Gallery PRO. Set the label jurors will see and the CG PRO form field IDs for first name and surname.', 'wp-contest-jury' ); ?>
         </p>
+        <?php else : ?>
+        <div class="notice notice-warning inline"><p>
+            <?php esc_html_e( 'No galleries found in Contest Gallery PRO. Create at least one gallery in CG PRO first, then come back here.', 'wp-contest-jury' ); ?>
+        </p></div>
+        <?php endif; ?>
 
         <table class="widefat" id="wpcj-galleries-table">
             <thead>
@@ -34,34 +64,42 @@ $galleries = $settings['galleries'];
             </thead>
             <tbody id="wpcj-gallery-rows">
                 <?php if ( empty( $galleries ) ) :
-                    // Render one empty row so the admin has something to fill in
                     $galleries = array( array( 'id' => '', 'label' => '' ) );
                 endif; ?>
                 <?php foreach ( $galleries as $i => $g ) : ?>
                 <tr class="wpcj-gallery-row">
                     <td>
-                        <input type="number" name="galleries[<?php echo $i; ?>][id]"
-                               value="<?php echo esc_attr( $g['id'] ); ?>"
-                               min="1" class="small-text" placeholder="e.g. 1">
+                        <?php if ( ! empty( $cg_galleries ) ) : ?>
+                            <strong><?php echo esc_html( $g['id'] ); ?></strong>
+                            <input type="hidden" name="galleries[<?php echo $i; ?>][id]" value="<?php echo esc_attr( $g['id'] ); ?>">
+                        <?php else : ?>
+                            <input type="number" name="galleries[<?php echo $i; ?>][id]"
+                                   value="<?php echo esc_attr( $g['id'] ); ?>"
+                                   min="1" class="small-text" placeholder="e.g. 1">
+                        <?php endif; ?>
                     </td>
                     <td>
                         <input type="text" name="galleries[<?php echo $i; ?>][label]"
                                value="<?php echo esc_attr( $g['label'] ); ?>"
                                class="regular-text" placeholder="<?php esc_attr_e( 'e.g. Single Photo', 'wp-contest-jury' ); ?>">
                     </td>
+                    <?php if ( empty( $cg_galleries ) ) : ?>
                     <td>
                         <button type="button" class="button wpcj-remove-gallery"><?php esc_html_e( 'Remove', 'wp-contest-jury' ); ?></button>
                     </td>
+                    <?php endif; ?>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
 
+        <?php if ( empty( $cg_galleries ) ) : ?>
         <p>
             <button type="button" class="button" id="wpcj-add-gallery">
                 + <?php esc_html_e( 'Add Gallery', 'wp-contest-jury' ); ?>
             </button>
         </p>
+        <?php endif; ?>
 
         <h2><?php esc_html_e( 'Voting Privacy', 'wp-contest-jury' ); ?></h2>
         <table class="form-table">
