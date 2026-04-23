@@ -46,7 +46,7 @@ if ( ! empty( $cg_galleries ) ) {
         <h2><?php esc_html_e( 'Contest Gallery PRO - Galleries', 'wp-contest-jury' ); ?></h2>
         <?php if ( ! empty( $cg_galleries ) ) : ?>
         <p class="description">
-            <?php esc_html_e( 'Galleries are loaded automatically from Contest Gallery PRO. Set the label jurors will see and the CG PRO form field IDs for first name and surname.', 'wp-contest-jury' ); ?>
+            <?php esc_html_e( 'Galleries are loaded automatically from Contest Gallery PRO. Set the label jurors will see for each gallery.', 'wp-contest-jury' ); ?>
         </p>
         <?php else : ?>
         <div class="notice notice-warning inline"><p>

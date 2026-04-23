@@ -13,6 +13,10 @@
 .wpcj-status-open   { background: #d5f0de; color: #00a32a; }
 .wpcj-status-closed { background: #fcf0f1; color: #b32d2e; }
 
+/* Delete button */
+.wpcj-btn-delete { color: #b32d2e !important; border-color: #b32d2e !important; }
+.wpcj-btn-delete:hover { background: #fcf0f1 !important; }
+
 /* Notice bar on voting page */
 .wpcj-notice        { padding: 10px 14px; margin-bottom: 16px; border-left: 4px solid; }
 .wpcj-notice-anon   { background: #f0f6fc; border-color: #72aee6; }

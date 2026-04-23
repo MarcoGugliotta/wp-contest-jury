@@ -133,10 +133,18 @@ class WPCJ_Admin {
             }
             $name       = sanitize_text_field( $_POST['round_name'] ?? '' );
             $gallery_id = absint( $_POST['gallery_id'] ?? 0 );
-            if ( $name && $gallery_id ) {
-                WPCJ_DB::insert_round( $name, $gallery_id );
+            $round_type = sanitize_key( $_POST['round_type'] ?? '' );
+            if ( ! in_array( $round_type, array( WPCJ_DB::ROUND_INITIAL, WPCJ_DB::ROUND_SHORTLIST, WPCJ_DB::ROUND_FINAL, WPCJ_DB::ROUND_WINNER ), true ) ) {
+                $round_type = WPCJ_DB::ROUND_INITIAL;
             }
-            wp_redirect( admin_url( 'admin.php?page=wpcj-rounds' ) );
+            if ( $name && $gallery_id ) {
+                $result = WPCJ_DB::insert_round( $name, $gallery_id, $round_type );
+                if ( $result === false ) {
+                    wp_redirect( admin_url( 'admin.php?page=wpcj-rounds&wpcj_error=duplicate_type' ) );
+                    exit;
+                }
+            }
+            wp_redirect( admin_url( 'admin.php?page=wpcj-rounds&wpcj_created=1' ) );
             exit;
         }
 
@@ -180,6 +188,19 @@ class WPCJ_Admin {
             }
             if ( $round_id ) {
                 WPCJ_DB::update_round_status( $round_id, 'closed' );
+            }
+            wp_redirect( admin_url( 'admin.php?page=wpcj-rounds' ) );
+            exit;
+        }
+
+        if ( $action === 'delete_round' ) {
+            $round_id = absint( $_GET['round'] ?? 0 );
+            check_admin_referer( 'wpcj_delete_round_' . $round_id );
+            if ( ! current_user_can( 'wpcj_manage_rounds' ) ) {
+                wp_die( esc_html__( 'Access denied.', 'wp-contest-jury' ) );
+            }
+            if ( $round_id ) {
+                WPCJ_DB::delete_round( $round_id );
             }
             wp_redirect( admin_url( 'admin.php?page=wpcj-rounds' ) );
             exit;

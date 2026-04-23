@@ -11,6 +11,11 @@ defined( 'ABSPATH' ) || exit;
  */
 class WPCJ_DB {
 
+    const ROUND_INITIAL   = 'initial';
+    const ROUND_SHORTLIST = 'shortlist';
+    const ROUND_FINAL     = 'final';
+    const ROUND_WINNER    = 'winner';
+
     // -------------------------------------------------------------------------
     // Rounds
     // -------------------------------------------------------------------------
@@ -32,14 +37,29 @@ class WPCJ_DB {
         return $row ?: null;
     }
 
-    public static function insert_round( string $name, int $gallery_id ): int|false {
+    public static function insert_round( string $name, int $gallery_id, string $round_type ): int|false {
         global $wpdb;
         $ok = $wpdb->insert(
             $wpdb->prefix . 'jury_rounds',
-            array( 'name' => $name, 'gallery_id' => $gallery_id, 'status' => 'draft' ),
-            array( '%s', '%d', '%s' )
+            array( 'name' => $name, 'gallery_id' => $gallery_id, 'round_type' => $round_type, 'status' => 'draft' ),
+            array( '%s', '%d', '%s', '%s' )
         );
         return $ok ? $wpdb->insert_id : false;
+    }
+
+    /**
+     * Deletes a round and all associated votes and shortlist entries.
+     * Only allowed for draft and closed rounds — open rounds cannot be deleted.
+     */
+    public static function delete_round( int $round_id ): bool {
+        global $wpdb;
+        $round = self::get_round( $round_id );
+        if ( ! $round || $round['status'] === 'open' ) {
+            return false;
+        }
+        $wpdb->delete( $wpdb->prefix . 'jury_shortlist', array( 'round_id' => $round_id ), array( '%d' ) );
+        $wpdb->delete( $wpdb->prefix . 'jury_votes',     array( 'round_id' => $round_id ), array( '%d' ) );
+        return (bool) $wpdb->delete( $wpdb->prefix . 'jury_rounds', array( 'id' => $round_id ), array( '%d' ) );
     }
 
     public static function update_round_status( int $round_id, string $status ): bool {
