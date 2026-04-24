@@ -77,6 +77,15 @@ class WPCJ_DB {
     // Votes
     // -------------------------------------------------------------------------
 
+    public static function delete_vote( int $round_id, int $juror_id, int $entry_id ): bool {
+        global $wpdb;
+        return (bool) $wpdb->delete(
+            $wpdb->prefix . 'jury_votes',
+            array( 'round_id' => $round_id, 'juror_id' => $juror_id, 'entry_id' => $entry_id ),
+            array( '%d', '%d', '%d' )
+        );
+    }
+
     /**
      * Upsert a vote. Uses INSERT … ON DUPLICATE KEY UPDATE so the juror can
      * change their score until the round is closed.
@@ -129,6 +138,45 @@ class WPCJ_DB {
             ),
             ARRAY_A
         ) ?: array();
+    }
+
+    // -------------------------------------------------------------------------
+    // Submissions  (juror finalises their votes for a round)
+    // -------------------------------------------------------------------------
+
+    public static function submit_round( int $round_id, int $juror_id ): bool {
+        global $wpdb;
+        $ok = $wpdb->insert(
+            $wpdb->prefix . 'jury_submissions',
+            array( 'round_id' => $round_id, 'juror_id' => $juror_id ),
+            array( '%d', '%d' )
+        );
+        return $ok !== false;
+    }
+
+    public static function get_submission( int $round_id, int $juror_id ): ?array {
+        global $wpdb;
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}jury_submissions WHERE round_id = %d AND juror_id = %d",
+                $round_id, $juror_id
+            ),
+            ARRAY_A
+        );
+        return $row ?: null;
+    }
+
+    /** Returns all submissions for a juror, keyed by round_id. */
+    public static function get_submissions_by_juror( int $juror_id ): array {
+        global $wpdb;
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}jury_submissions WHERE juror_id = %d",
+                $juror_id
+            ),
+            ARRAY_A
+        ) ?: array();
+        return array_column( $rows, null, 'round_id' );
     }
 
     // -------------------------------------------------------------------------

@@ -118,6 +118,45 @@ if ( ! empty( $cg_galleries ) ) {
             </tr>
         </table>
 
+        <h2><?php esc_html_e( 'Jury Panel Page', 'wp-contest-jury' ); ?></h2>
+        <table class="form-table">
+            <tr>
+                <th><label for="jury_page_id"><?php esc_html_e( 'Jury Page', 'wp-contest-jury' ); ?></label></th>
+                <td>
+                    <select id="jury_page_id" name="jury_page_id">
+                        <option value="0"><?php esc_html_e( '— Select a page —', 'wp-contest-jury' ); ?></option>
+                        <?php foreach ( get_pages() as $p ) : ?>
+                            <option value="<?php echo esc_attr( $p->ID ); ?>" <?php selected( WPCJ_Settings::get_jury_page_id(), $p->ID ); ?>>
+                                <?php echo esc_html( $p->post_title ); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <p class="description"><?php esc_html_e( 'Page containing the [wpcj_jury_panel] shortcode. Jurors are sent here after login.', 'wp-contest-jury' ); ?></p>
+                </td>
+            </tr>
+            <tr>
+                <th><label for="welcome_message"><?php esc_html_e( 'Welcome Message', 'wp-contest-jury' ); ?></label></th>
+                <td>
+                    <textarea id="welcome_message" name="welcome_message" rows="4" class="large-text"><?php echo esc_textarea( WPCJ_Settings::get_welcome_message() ); ?></textarea>
+                    <p class="description"><?php esc_html_e( 'Shown to jurors on the round selection screen after login. Leave empty to hide.', 'wp-contest-jury' ); ?></p>
+                </td>
+            </tr>
+        </table>
+
+        <h2><?php esc_html_e( 'Voting Rules', 'wp-contest-jury' ); ?></h2>
+        <table class="form-table">
+            <tr>
+                <th><?php esc_html_e( 'Require all votes', 'wp-contest-jury' ); ?></th>
+                <td>
+                    <label>
+                        <input type="checkbox" name="require_all_votes" value="1" <?php checked( WPCJ_Settings::require_all_votes() ); ?>>
+                        <?php esc_html_e( 'Jurors must vote every entry before they can submit.', 'wp-contest-jury' ); ?>
+                    </label>
+                    <p class="description"><?php esc_html_e( 'When unchecked, jurors can submit at any time even with partial votes.', 'wp-contest-jury' ); ?></p>
+                </td>
+            </tr>
+        </table>
+
         <?php submit_button( __( 'Save Settings', 'wp-contest-jury' ) ); ?>
     </form>
 </div>

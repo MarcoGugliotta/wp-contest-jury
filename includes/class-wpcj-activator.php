@@ -62,9 +62,21 @@ class WPCJ_Activator {
             UNIQUE KEY uq_shortlist (round_id, entry_id)
         ) $charset;";
 
+        // One row per (juror × round) once the juror finalises their votes.
+        // Until this row exists, the juror is in "draft" state and can change votes freely.
+        $sql_submissions = "CREATE TABLE {$wpdb->prefix}jury_submissions (
+            id           BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            round_id     BIGINT(20) UNSIGNED NOT NULL,
+            juror_id     BIGINT(20) UNSIGNED NOT NULL,
+            submitted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY uq_submission (round_id, juror_id)
+        ) $charset;";
+
         dbDelta( $sql_rounds );
         dbDelta( $sql_votes );
         dbDelta( $sql_shortlist );
+        dbDelta( $sql_submissions );
 
         // dbDelta does not reliably add new UNIQUE KEYs to existing tables.
         // Enforce uq_workflow manually if it is missing.

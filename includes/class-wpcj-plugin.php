@@ -3,10 +3,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Main orchestrator class. Loaded on every request.
- *
- * Think of this as the Spring ApplicationContext: it wires all the
- * sub-components together and registers them with WordPress's event system
- * (hooks ≈ Spring application events / listeners).
  */
 class WPCJ_Plugin {
 
@@ -29,12 +25,9 @@ class WPCJ_Plugin {
         require_once WPCJ_PLUGIN_DIR . 'includes/class-wpcj-db.php';
         require_once WPCJ_PLUGIN_DIR . 'includes/class-wpcj-cg-reader.php';
         require_once WPCJ_PLUGIN_DIR . 'admin/class-wpcj-admin.php';
+        require_once WPCJ_PLUGIN_DIR . 'includes/class-wpcj-frontend.php';
     }
 
-    /**
-     * Register all WordPress hooks. Called once from the main plugin file.
-     * Hooks are WordPress's event bus - add_action() ≈ addEventListener().
-     */
     public function run(): void {
         add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 
@@ -42,6 +35,9 @@ class WPCJ_Plugin {
             $admin = new WPCJ_Admin();
             $admin->register_hooks();
         }
+
+        $frontend = new WPCJ_Frontend();
+        $frontend->register_hooks();
     }
 
     public function load_textdomain(): void {

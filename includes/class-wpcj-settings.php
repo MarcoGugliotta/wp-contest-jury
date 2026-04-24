@@ -3,22 +3,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Manages all plugin configuration stored in WordPress options.
- *
- * Stored in wp_options as a single serialized array under 'wpcj_settings'.
- *
- * Default option shape:
- * [
- *   'galleries' => [
- *     [ 'id' => 1, 'label' => 'Gallery 1' ],
- *     ...
- *   ],
- *   'show_author_name' => false,
- *   'jury_page_id'     => 0,
- * ]
- *
- * Author identity is resolved via wp_contest_gal1ery.WpUserId → wp_users/wp_usermeta.
- * PCG form field IDs are NOT stored here: they change per festival while WP user
- * data is stable across editions.
+ * Stored as a single serialized array under 'wpcj_settings'.
  */
 class WPCJ_Settings {
 
@@ -26,8 +11,11 @@ class WPCJ_Settings {
 
     private static function defaults(): array {
         return array(
-            'galleries'        => array(),
-            'show_author_name' => false,
+            'galleries'         => array(),
+            'show_author_name'  => false,
+            'jury_page_id'      => 0,
+            'welcome_message'   => '',
+            'require_all_votes' => false,
         );
     }
 
@@ -36,12 +24,20 @@ class WPCJ_Settings {
         return wp_parse_args( $saved, self::defaults() );
     }
 
-    /**
-     * Whether jurors see the author's name/surname during voting.
-     * false = anonymous (default), true = author info visible.
-     */
     public static function show_author_name(): bool {
         return (bool) self::get_all()['show_author_name'];
+    }
+
+    public static function get_jury_page_id(): int {
+        return (int) self::get_all()['jury_page_id'];
+    }
+
+    public static function get_welcome_message(): string {
+        return (string) self::get_all()['welcome_message'];
+    }
+
+    public static function require_all_votes(): bool {
+        return (bool) self::get_all()['require_all_votes'];
     }
 
     /**
@@ -60,10 +56,6 @@ class WPCJ_Settings {
         return $galleries;
     }
 
-    /**
-     * Returns the human-readable label for a gallery ID.
-     * Falls back to "Gallery {id}" if not configured.
-     */
     public static function get_gallery_label( int $gallery_id ): string {
         $galleries = self::get_galleries();
         return $galleries[ $gallery_id ] ?? sprintf( __( 'Gallery %d', 'wp-contest-jury' ), $gallery_id );
@@ -77,15 +69,15 @@ class WPCJ_Settings {
                 $id    = absint( $g['id'] ?? 0 );
                 $label = sanitize_text_field( $g['label'] ?? '' );
                 if ( $id > 0 && $label !== '' ) {
-                    $clean['galleries'][] = array(
-                        'id'    => $id,
-                        'label' => $label,
-                    );
+                    $clean['galleries'][] = array( 'id' => $id, 'label' => $label );
                 }
             }
         }
 
-        $clean['show_author_name'] = ! empty( $data['show_author_name'] );
+        $clean['show_author_name']  = ! empty( $data['show_author_name'] );
+        $clean['jury_page_id']      = absint( $data['jury_page_id'] ?? 0 );
+        $clean['welcome_message']   = sanitize_textarea_field( $data['welcome_message'] ?? '' );
+        $clean['require_all_votes'] = ! empty( $data['require_all_votes'] );
 
         update_option( self::OPTION_KEY, $clean );
     }

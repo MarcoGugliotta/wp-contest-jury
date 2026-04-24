@@ -239,7 +239,7 @@ class WPCJ_Admin {
         $score    = absint( $_POST['score']    ?? 0 );
         $notes    = sanitize_textarea_field( $_POST['notes'] ?? '' );
 
-        if ( ! $round_id || ! $entry_id || $score < 1 || $score > 5 ) {
+        if ( ! $round_id || ! $entry_id || $score > 5 ) {
             wp_send_json_error( array( 'message' => __( 'Invalid data.', 'wp-contest-jury' ) ), 400 );
         }
 
@@ -248,7 +248,14 @@ class WPCJ_Admin {
             wp_send_json_error( array( 'message' => __( 'Round is not open.', 'wp-contest-jury' ) ), 400 );
         }
 
-        $ok = WPCJ_DB::upsert_vote( $round_id, get_current_user_id(), $entry_id, $score, $notes );
+        $juror_id = get_current_user_id();
+
+        if ( $score === 0 ) {
+            WPCJ_DB::delete_vote( $round_id, $juror_id, $entry_id );
+            wp_send_json_success( array( 'removed' => true ) );
+        }
+
+        $ok = WPCJ_DB::upsert_vote( $round_id, $juror_id, $entry_id, $score, $notes );
         if ( $ok ) {
             wp_send_json_success();
         } else {
@@ -265,7 +272,12 @@ class WPCJ_Admin {
     }
 
     public function page_rounds(): void {
-        require WPCJ_PLUGIN_DIR . 'admin/partials/rounds.php';
+        $action = isset( $_GET['wpcj_action'] ) ? sanitize_key( $_GET['wpcj_action'] ) : '';
+        if ( $action === 'results' && ! empty( $_GET['round'] ) ) {
+            require WPCJ_PLUGIN_DIR . 'admin/partials/results.php';
+        } else {
+            require WPCJ_PLUGIN_DIR . 'admin/partials/rounds.php';
+        }
     }
 
     public function page_vote(): void {
