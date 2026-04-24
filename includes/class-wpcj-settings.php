@@ -61,6 +61,20 @@ class WPCJ_Settings {
         return $galleries[ $gallery_id ] ?? sprintf( __( 'Gallery %d', 'wp-contest-jury' ), $gallery_id );
     }
 
+    /**
+     * Returns the configured round types for a gallery.
+     * Falls back to the four default types if none are configured.
+     */
+    public static function get_gallery_round_types( int $gallery_id ): array {
+        $settings = self::get_all();
+        foreach ( $settings['galleries'] as $g ) {
+            if ( (int) $g['id'] === $gallery_id && ! empty( $g['round_types'] ) ) {
+                return array_values( array_filter( array_map( 'strval', $g['round_types'] ) ) );
+            }
+        }
+        return array( 'initial', 'shortlist', 'final', 'winner' );
+    }
+
     public static function save( array $data ): void {
         $clean = self::defaults();
 
@@ -69,7 +83,16 @@ class WPCJ_Settings {
                 $id    = absint( $g['id'] ?? 0 );
                 $label = sanitize_text_field( $g['label'] ?? '' );
                 if ( $id > 0 && $label !== '' ) {
-                    $clean['galleries'][] = array( 'id' => $id, 'label' => $label );
+                    $types = array();
+                    if ( ! empty( $g['round_types'] ) && is_array( $g['round_types'] ) ) {
+                        foreach ( $g['round_types'] as $t ) {
+                            $t = substr( trim( sanitize_text_field( $t ) ), 0, 30 );
+                            if ( $t !== '' ) {
+                                $types[] = $t;
+                            }
+                        }
+                    }
+                    $clean['galleries'][] = array( 'id' => $id, 'label' => $label, 'round_types' => $types );
                 }
             }
         }

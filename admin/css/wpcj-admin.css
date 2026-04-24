@@ -62,6 +62,40 @@
 /* Saved indicator */
 .wpcj-saved-indicator { margin-left: 8px; color: #00a32a; font-weight: 600; font-size: 12px; }
 
+/* Round types list in Settings */
+.wpcj-round-types-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
+.wpcj-rt-item { display: flex; align-items: center; gap: 6px; }
+.wpcj-rt-item input { flex: 1; max-width: 200px; }
+.wpcj-remove-rt { color: #b32d2e !important; font-size: 13px; text-decoration: none; line-height: 1; }
+.wpcj-remove-rt:hover { color: #8a1c1d !important; }
+.wpcj-round-type { font-family: monospace; font-size: 12px; background: #f0f0f1; padding: 2px 6px; border-radius: 3px; }
+
+/* Progress page */
+.wpcj-prog-card { background: #fff; border: 1px solid #c3c4c7; border-radius: 6px; margin-bottom: 28px; overflow: hidden; }
+.wpcj-prog-card__head { display: flex; justify-content: space-between; align-items: flex-start; padding: 18px 22px 14px; border-bottom: 1px solid #f0f0f1; gap: 12px; flex-wrap: wrap; }
+.wpcj-prog-card__name { font-size: 17px; font-weight: 700; color: #1d2327; margin-bottom: 5px; }
+.wpcj-prog-card__sub  { font-size: 13px; color: #646970; }
+.wpcj-prog-card__head-right { display: flex; align-items: center; padding-top: 2px; }
+.wpcj-prog-submitted-pill { font-size: 13px; font-weight: 600; padding: 5px 14px; background: #f0f6fc; color: #2271b1; border-radius: 20px; border: 1px solid #c2d9f0; white-space: nowrap; }
+.wpcj-prog-overall { display: flex; align-items: center; gap: 14px; padding: 14px 22px; background: #f8f9fa; border-bottom: 1px solid #f0f0f1; }
+.wpcj-prog-overall__label { font-size: 12px; color: #646970; white-space: nowrap; }
+.wpcj-admin-bar { background: #e0e0e0; border-radius: 99px; height: 8px; overflow: hidden; flex: 1; }
+.wpcj-admin-bar--sm { height: 6px; min-width: 140px; }
+.wpcj-admin-bar__fill { background: #2271b1; height: 100%; border-radius: 99px; transition: width .3s; }
+.wpcj-admin-bar__fill--done { background: #00a32a; }
+.wpcj-prog-table { border: none !important; }
+.wpcj-prog-table thead th { background: #f8f9fa; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #646970; padding: 10px 22px; }
+.wpcj-prog-table tbody td { padding: 12px 22px; vertical-align: middle; border-bottom: 1px solid #f0f0f1; }
+.wpcj-prog-table tbody tr:last-child td { border-bottom: none; }
+.wpcj-juror-cell { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.wpcj-juror-av { width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 700; flex-shrink: 0; letter-spacing: .5px; }
+.wpcj-juror-bar-cell { min-width: 160px; }
+.wpcj-juror-count { font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wpcj-prog-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
+.wpcj-prog-badge--new       { background: #f0f0f1; color: #646970; }
+.wpcj-prog-badge--progress  { background: #fff3cd; color: #856404; }
+.wpcj-prog-badge--submitted { background: #d5f0de; color: #00a32a; }
+
 /* Results table */
 .wpcj-results-table td:nth-child(1) { width: 40px; text-align: center; font-size: 16px; color: #1d2327; }
 .wpcj-results-table td:nth-child(5) { font-size: 14px; color: #00a32a; }

@@ -7,13 +7,21 @@ if ( ! current_user_can( 'wpcj_manage_rounds' ) ) {
 
 $rounds    = WPCJ_DB::get_rounds();
 $galleries = WPCJ_Settings::get_galleries();
+
+// Build gallery → types map for JS
+$gallery_types = array();
+foreach ( $galleries as $gid => $label ) {
+    $gallery_types[ (int) $gid ] = WPCJ_Settings::get_gallery_round_types( (int) $gid );
+}
+$first_gid   = (int) array_key_first( $galleries );
+$first_types = $gallery_types[ $first_gid ] ?? array( 'initial', 'shortlist', 'final', 'winner' );
 ?>
 <div class="wrap wpcj-wrap">
     <h1><?php esc_html_e( 'Voting Rounds', 'wp-contest-jury' ); ?></h1>
 
     <?php if ( isset( $_GET['wpcj_error'] ) && $_GET['wpcj_error'] === 'duplicate_type' ) : ?>
         <div class="notice notice-error is-dismissible">
-            <p><?php esc_html_e( 'A round of this type already exists for the selected gallery. Each gallery can have only one Initial, Shortlist, Final, and Winner round.', 'wp-contest-jury' ); ?></p>
+            <p><?php esc_html_e( 'A round of this type already exists for the selected gallery. Each gallery can have only one round per type.', 'wp-contest-jury' ); ?></p>
         </div>
     <?php endif; ?>
     <?php if ( isset( $_GET['wpcj_created'] ) ) : ?>
@@ -56,12 +64,11 @@ $galleries = WPCJ_Settings::get_galleries();
                     <th><label for="round_type"><?php esc_html_e( 'Round Type', 'wp-contest-jury' ); ?></label></th>
                     <td>
                         <select id="round_type" name="round_type">
-                            <option value="<?php echo esc_attr( WPCJ_DB::ROUND_INITIAL ); ?>"><?php esc_html_e( 'Initial', 'wp-contest-jury' ); ?></option>
-                            <option value="<?php echo esc_attr( WPCJ_DB::ROUND_SHORTLIST ); ?>"><?php esc_html_e( 'Shortlist', 'wp-contest-jury' ); ?></option>
-                            <option value="<?php echo esc_attr( WPCJ_DB::ROUND_FINAL ); ?>"><?php esc_html_e( 'Final', 'wp-contest-jury' ); ?></option>
-                            <option value="<?php echo esc_attr( WPCJ_DB::ROUND_WINNER ); ?>"><?php esc_html_e( 'Winner', 'wp-contest-jury' ); ?></option>
+                            <?php foreach ( $first_types as $type ) : ?>
+                                <option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $type ); ?></option>
+                            <?php endforeach; ?>
                         </select>
-                        <p class="description"><?php esc_html_e( 'Each gallery can have one round per type.', 'wp-contest-jury' ); ?></p>
+                        <p class="description"><?php esc_html_e( 'Each gallery can have one round per type. Types are configured in Settings.', 'wp-contest-jury' ); ?></p>
                     </td>
                 </tr>
             </table>
@@ -131,3 +138,19 @@ $galleries = WPCJ_Settings::get_galleries();
         </table>
     <?php endif; ?>
 </div>
+
+<script>
+(function ($) {
+    var galleryTypes = <?php echo wp_json_encode( $gallery_types ); ?>;
+
+    $('#gallery_id').on('change', function () {
+        var gid    = parseInt( $(this).val(), 10 );
+        var types  = galleryTypes[ gid ] || [];
+        var $sel   = $('#round_type');
+        $sel.empty();
+        $.each( types, function ( i, t ) {
+            $sel.append( $('<option>', { value: t, text: t }) );
+        });
+    });
+}(jQuery));
+</script>

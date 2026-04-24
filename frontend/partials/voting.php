@@ -159,14 +159,23 @@ $url_base = add_query_arg( 'jury_round', $round_id, $url_base );
             </div>
 
             <div class="wpcj-entry-front__vote">
-                <div class="wpcj-stars-front" data-score="<?php echo esc_attr( $score ); ?>">
-                    <?php for ( $s = 1; $s <= 5; $s++ ) : ?>
-                        <button class="wpcj-star-front <?php echo $s <= $score ? 'active' : ''; ?>"
-                                data-value="<?php echo $s; ?>"
-                                <?php echo $readonly ? 'disabled' : ''; ?>>
-                            &#9733;
+                <div class="wpcj-vote-row">
+                    <div class="wpcj-stars-front" data-score="<?php echo esc_attr( $score ); ?>">
+                        <?php for ( $s = 1; $s <= 5; $s++ ) : ?>
+                            <button class="wpcj-star-front <?php echo $s <= $score ? 'active' : ''; ?>"
+                                    data-value="<?php echo $s; ?>"
+                                    <?php echo $readonly ? 'disabled' : ''; ?>>
+                                &#9733;
+                            </button>
+                        <?php endfor; ?>
+                    </div>
+                    <?php if ( ! $readonly ) : ?>
+                        <button class="wpcj-reset-vote <?php echo $is_voted ? '' : 'wpcj-hidden'; ?>"
+                                data-tooltip="<?php esc_attr_e( 'Remove vote', 'wp-contest-jury' ); ?>"
+                                aria-label="<?php esc_attr_e( 'Remove vote', 'wp-contest-jury' ); ?>">
+                            &#10005;
                         </button>
-                    <?php endfor; ?>
+                    <?php endif; ?>
                 </div>
                 <?php if ( ! $readonly ) : ?>
                     <textarea class="wpcj-notes-front"

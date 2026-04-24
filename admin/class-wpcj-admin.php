@@ -43,6 +43,15 @@ class WPCJ_Admin {
 
         add_submenu_page(
             'wpcj-dashboard',
+            __( 'Voting Progress', 'wp-contest-jury' ),
+            __( 'Progress', 'wp-contest-jury' ),
+            'wpcj_manage_rounds',
+            'wpcj-progress',
+            array( $this, 'page_progress' )
+        );
+
+        add_submenu_page(
+            'wpcj-dashboard',
             __( 'Voting Rounds', 'wp-contest-jury' ),
             __( 'Rounds', 'wp-contest-jury' ),
             'wpcj_manage_rounds',
@@ -133,9 +142,10 @@ class WPCJ_Admin {
             }
             $name       = sanitize_text_field( $_POST['round_name'] ?? '' );
             $gallery_id = absint( $_POST['gallery_id'] ?? 0 );
-            $round_type = sanitize_key( $_POST['round_type'] ?? '' );
-            if ( ! in_array( $round_type, array( WPCJ_DB::ROUND_INITIAL, WPCJ_DB::ROUND_SHORTLIST, WPCJ_DB::ROUND_FINAL, WPCJ_DB::ROUND_WINNER ), true ) ) {
-                $round_type = WPCJ_DB::ROUND_INITIAL;
+            $round_type = substr( sanitize_text_field( $_POST['round_type'] ?? '' ), 0, 30 );
+            $allowed    = WPCJ_Settings::get_gallery_round_types( $gallery_id );
+            if ( ! in_array( $round_type, $allowed, true ) ) {
+                $round_type = $allowed[0] ?? 'initial';
             }
             if ( $name && $gallery_id ) {
                 $result = WPCJ_DB::insert_round( $name, $gallery_id, $round_type );
@@ -269,6 +279,10 @@ class WPCJ_Admin {
 
     public function page_dashboard(): void {
         require WPCJ_PLUGIN_DIR . 'admin/partials/dashboard.php';
+    }
+
+    public function page_progress(): void {
+        require WPCJ_PLUGIN_DIR . 'admin/partials/progress.php';
     }
 
     public function page_rounds(): void {

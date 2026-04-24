@@ -101,13 +101,22 @@
 .wpcj-entry-front__author { font-size: 11px; color: var(--wpcj-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .wpcj-entry-front__vote { padding: 6px 8px 10px; margin-top: auto; }
-.wpcj-stars-front { display: flex; gap: 2px; margin-bottom: 4px; }
+.wpcj-vote-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.wpcj-stars-front { display: flex; gap: 2px; }
 .wpcj-star-front  { background: none; border: none; font-size: 20px; color: var(--wpcj-star-off); cursor: pointer; padding: 2px; line-height: 1; transition: color .1s; }
 .wpcj-star-front.active { color: var(--wpcj-star); }
 .wpcj-star-front:not([disabled]):hover,
 .wpcj-stars-front:hover .wpcj-star-front:not([disabled]) { color: var(--wpcj-star); }
 .wpcj-stars-front:hover .wpcj-star-front:not([disabled]):hover ~ .wpcj-star-front { color: var(--wpcj-star-off); }
 .wpcj-star-front[disabled] { cursor: default; }
+
+/* Reset vote button */
+.wpcj-reset-vote { background: none; border: 1px solid var(--wpcj-border); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--wpcj-muted); cursor: pointer; padding: 0; flex-shrink: 0; position: relative; transition: border-color .15s, color .15s; }
+.wpcj-reset-vote:hover { border-color: var(--wpcj-danger); color: var(--wpcj-danger); }
+.wpcj-reset-vote::after { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 5px); left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.75); color: #fff; font-size: 11px; white-space: nowrap; padding: 3px 8px; border-radius: 4px; opacity: 0; pointer-events: none; transition: opacity .15s; }
+.wpcj-reset-vote:hover::after { opacity: 1; }
+
+.wpcj-hidden { display: none !important; }
 
 .wpcj-notes-front { width: 100%; font-size: 11px; padding: 4px 6px; border: 1px solid var(--wpcj-border); border-radius: 4px; resize: none; box-sizing: border-box; margin-top: 2px; }
 .wpcj-notes-readonly { font-size: 11px; color: var(--wpcj-muted); margin: 4px 0 0; font-style: italic; }
@@ -125,3 +134,18 @@
 .wpcj-empty         { color: var(--wpcj-muted); padding: 32px 0; text-align: center; }
 .wpcj-access-denied { color: var(--wpcj-danger); }
 .wpcj-error         { color: var(--wpcj-danger); }
+
+/* ── Lightbox ─────────────────────────────────────────────── */
+#wpcj-lightbox { display: none; position: fixed; inset: 0; z-index: 99999; }
+#wpcj-lightbox.wpcj-lb--open { display: block; }
+.wpcj-lb-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.88); cursor: pointer; }
+.wpcj-lb-img { position: absolute; top: 50%; left: 50%; max-width: 90vw; max-height: 85vh; object-fit: contain; transform: translate(-50%, -50%); transform-origin: center; user-select: none; z-index: 1; transition: transform .08s ease-out; }
+.wpcj-lb-img.is-draggable { cursor: grab; }
+.wpcj-lb-img.is-dragging  { cursor: grabbing; transition: none; }
+.wpcj-lb-close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,.15); border: none; color: #fff; font-size: 26px; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 2; display: flex; align-items: center; justify-content: center; line-height: 1; }
+.wpcj-lb-close:hover { background: rgba(255,255,255,.3); }
+.wpcj-lb-controls { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,.65); padding: 8px 18px; border-radius: 30px; }
+.wpcj-lb-controls button { background: rgba(255,255,255,.2); border: none; color: #fff; font-size: 20px; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
+.wpcj-lb-controls button:hover { background: rgba(255,255,255,.35); }
+.wpcj-lb-zoom-label { color: #fff; font-size: 13px; font-weight: 600; min-width: 44px; text-align: center; }
+.wpcj-lb-body-lock  { overflow: hidden; }

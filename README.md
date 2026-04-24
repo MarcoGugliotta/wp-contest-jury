@@ -16,7 +16,7 @@ Works alongside **Contest Gallery PRO** (PCG): reads entries from PCG tables (re
 ## How it works — overview
 
 1. Admin installs the plugin, creates a WP page, adds `[wpcj_jury_panel]` shortcode
-2. Admin configures galleries and settings in **Jury Panel → Settings**
+2. Admin configures galleries, round types, and settings in **Jury Panel → Settings**
 3. Admin creates jury members (WP users with role `jury_member`)
 4. Admin creates a voting round in **Jury Panel → Rounds** and opens it
 5. Jurors visit the jury page URL, log in, and vote
@@ -53,7 +53,8 @@ The plugin reads `wp_contest_gal1ery_f_input` and excludes fields with these exa
 
 | Setting | Description |
 |---------|-------------|
-| Galleries | Auto-populated from PCG. Set a display label for each gallery. |
+| Galleries | Auto-populated from PCG. Set a display label and the round types for each gallery. |
+| Round Types | Per-gallery list of type names (free text, max 30 chars). Used to populate the type dropdown when creating a round. |
 | Show author name to jurors | Off by default (anonymous voting). When on, the uploader's name is shown on each entry card. |
 | Jury Page | The WP page containing `[wpcj_jury_panel]`. Jurors are redirected here after login. |
 | Welcome Message | Text shown to jurors on the round selection screen after login. |
@@ -84,18 +85,15 @@ Place this shortcode on any WordPress page. Set that page in **Settings → Jury
 
 ## Voting rounds
 
-Each round is linked to one gallery and has a `round_type` that enforces a unique workflow step per gallery:
+Each round is linked to one gallery and has a `round_type` that enforces a unique workflow step per gallery.
 
-| Type | Constant |
-|------|----------|
-| `initial` | `WPCJ_DB::ROUND_INITIAL` |
-| `shortlist` | `WPCJ_DB::ROUND_SHORTLIST` |
-| `final` | `WPCJ_DB::ROUND_FINAL` |
-| `winner` | `WPCJ_DB::ROUND_WINNER` |
+Round types are configured per gallery in **Settings**. If no types are defined for a gallery the plugin falls back to the four built-in types: `initial`, `shortlist`, `final`, `winner`.
 
 Each gallery can have at most one round per type (enforced by a UNIQUE KEY at the database level).
 
 **Round lifecycle:** `draft` → `open` → `closed`
+
+When creating a round, selecting a different gallery dynamically updates the type dropdown to show only the types configured for that gallery.
 
 ---
 
@@ -106,11 +104,11 @@ Each gallery can have at most one round per type (enforced by a UNIQUE KEY at th
 3. After login: **Selection screen** — lists all open rounds with individual progress (voted/total) and state badge (Not Started / In Progress / Submitted)
 4. Juror selects a round → **Voting screen**:
    - Progress bar: "Voted: 45 / 230"
-   - Filter tabs: **All / To vote / Voted**
+   - Filter tabs: **All / To vote (N) / Voted (N)** — counts update live after each vote
    - Paginated grid (20 entries per page), responsive (2 columns on mobile → 5 on desktop)
-   - Each card: thumbnail, entry ID, title, star rating (1–5), optional notes
-   - Voted cards show a green border and a ✓ badge
-   - Every star click auto-saves via AJAX — no save button needed
+   - Each card: thumbnail, score badge top-left ("3/5"), ✓ badge top-right on voted entries, entry ID, title, star rating (1–5), optional notes
+   - Clicking a star saves the vote immediately via AJAX; clicking the same star again removes the vote
+   - Voted cards show a green border
    - **Submit Votes** button finalises the round for that juror (irreversible)
 5. After submission: round appears as "Submitted" in the selection screen; juror can re-open to view their votes in read-only mode
 
@@ -134,6 +132,8 @@ PCG tables are never written to by this plugin.
 Each entry card shows:
 
 - Thumbnail (click to open full size)
+- Score badge top-left ("X/5") — visible only when a vote has been cast
+- ✓ badge top-right — visible only on voted entries
 - Entry ID
 - **Title** — first `Short_Text` field from `wp_contest_gal1ery_entries`
 - Author name (only in transparent mode, from `wp_users`)

@@ -119,6 +119,35 @@ class WPCJ_DB {
         ) ?: array();
     }
 
+    /** Returns vote counts per juror for a round, keyed by juror_id. */
+    public static function get_vote_counts_by_round( int $round_id ): array {
+        global $wpdb;
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT juror_id, COUNT(*) AS vote_count
+                 FROM {$wpdb->prefix}jury_votes
+                 WHERE round_id = %d
+                 GROUP BY juror_id",
+                $round_id
+            ),
+            ARRAY_A
+        ) ?: array();
+        return array_column( $rows, 'vote_count', 'juror_id' );
+    }
+
+    /** Returns all submissions for a round, keyed by juror_id. */
+    public static function get_submissions_by_round( int $round_id ): array {
+        global $wpdb;
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}jury_submissions WHERE round_id = %d",
+                $round_id
+            ),
+            ARRAY_A
+        ) ?: array();
+        return array_column( $rows, null, 'juror_id' );
+    }
+
     /**
      * Aggregated scores per entry for a round - jury chief only.
      */

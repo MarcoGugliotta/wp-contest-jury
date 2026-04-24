@@ -3,7 +3,7 @@
  * Plugin Name: WP Contest Jury
  * Plugin URI:  https://github.com/mgugliotta/wp-contest-jury
  * Description: Jury management panel for photo contests. Reads entries from Contest Gallery PRO (read-only) and manages all jury/voting data in its own tables. Fully configurable - works with any Contest Gallery PRO installation.
- * Version:     0.1.0
+ * Version:     0.2.0
  * Author:      Marco Gugliotta
  * Text Domain: wp-contest-jury
  * Domain Path: /languages
@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'WPCJ_VERSION',     '0.1.0' );
+define( 'WPCJ_VERSION',     '0.2.0' );
 define( 'WPCJ_PLUGIN_FILE', __FILE__ );
 define( 'WPCJ_PLUGIN_DIR',  plugin_dir_path( __FILE__ ) );
 define( 'WPCJ_PLUGIN_URL',  plugin_dir_url( __FILE__ ) );
